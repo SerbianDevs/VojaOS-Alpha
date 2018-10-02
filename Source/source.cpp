@@ -4,12 +4,22 @@
 #include <fstream>
 #include <tchar.h>
 #include <stdio.h>
-#include <dirent.h>
 #include <sys/types.h>
 #include <string>
+#include <experimental/filesystem> 
+#include <filesystem>
+#include <direct.h>
+
 
 DWORD mydrives = 100;// buffer length
 char lpBuffer[100];// buffer for drive string storage
+WIN32_FIND_DATA ffd;
+LARGE_INTEGER filesize;
+TCHAR szDir[MAX_PATH];
+size_t length_of_arg;
+HANDLE hFind = INVALID_HANDLE_VALUE;
+DWORD dwError = 0;
+
 
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
@@ -30,7 +40,6 @@ int main(int argc, char** argv) {
 	system("CLS");
 	cout << "Booting.";
 	string pathh;
-	pathh = " A:/Root/";
 	Sleep(200);
 	system("CLS");
 	cout << "Booting..";
@@ -61,9 +70,11 @@ int main(int argc, char** argv) {
 	cout <<"Booting..Loading Memory...\n";
 	cout << "|[][][][][][]|";
 	Sleep(790);
+	_chdir("C:/");
 	system("CLS");
 	string fileopen;
 	string input1;
+	string filename2 = "C:/";
 	MEMORYSTATUSEX memInfo;
 	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
 	GlobalMemoryStatusEx(&memInfo);
@@ -92,8 +103,10 @@ int main(int argc, char** argv) {
 		cin >> password2;
 		if (password2 == password1) {
 			system("color 8F");
+			system("CLS");
 			goto label_a;
 			i = 0;
+			
 		}
 		if (password2 != password1) {
 			cout << "Wrong password\n";
@@ -115,19 +128,19 @@ int main(int argc, char** argv) {
 	cout << " American Megatrends BIOS \n";
 	cout << " Memory PWM Value is " << c << " of max 5\n";
 	cout << " Memory PWM2 Value is " << b << " of max 51\n";
-	cout << " Current dir is " << pathh << "\n";
 	cout << " Report bugs at my github page! https://github.com/VojislavDabicKP/VojaOS\n";
 	cout << " For help enter H, ? or Help.\n";
 	cout << "-----------------------------------------------\n";
 	label_3:
-	cout << "user$root" << pathh << "/: ";
+	cout << "user$root/" << fileopen2 << ": ";
 	cin >> input1;
 	if (input1 == "makefile") {
-		cout << "enter name (eg. filename.md). Enter x to go back: ";
+		cout << "enter name and path (eg. F:/Folder/filename.md). Enter x to go back: ";
 		cin >> fileopen;
 		if (ENOENT == errno){
 			cout << "Directory does not exist!";
-			Sleep(1000);
+			Sleep(2000);
+			system("CLS");
 			goto label_3;
 		}
 		if (fileopen == "x" or fileopen == "X"){
@@ -135,7 +148,7 @@ int main(int argc, char** argv) {
 		}
 		ofstream myfile;
 		myfile. open (fileopen.c_str());
-		cout << "File name: " << fileopen << "\nSaved in /root/ \n";
+		cout << "File name: " << fileopen << "\nSaved in" << fileopen << "\n";
 		cout << "Done!\n";
 		Sleep(700);
 		goto label_3;
@@ -149,10 +162,10 @@ int main(int argc, char** argv) {
 		cout << "Enter open to open a txt file. (soon)\n";
 		cout << "crash: crash the system. [WARNING!!!]\n";
 		cout << "Enter cls to clear the screen.\n";
-		cout << "Enter RED, GRAY, BLACK, BLUE, or WHITE to change themes\n";
+		cout << "Enter RED, PURPLE, GRAY, BLACK, BLUE, or WHITE to change themes\n";
 		cout << "Enter specs or specifications to see your PC specs.\n";
 		cout << "Enter logout to log out if you have a password.\n";
-		cout << "Enter dir to change directory (soon)\n";
+		cout << "Enter dir to change directory (NEW)\n";
 		cout << "Enter cdir to see current dir directory\n";
 		cout << "Enter shutdown to safely shutdown the system\n";
 		cout << "Enter go back to go back in case of a bug or glitch\n";
@@ -163,11 +176,11 @@ int main(int argc, char** argv) {
 	cout << "------------------------------------------\n";
 	cout << " RAM MEMORY:" << totalPhysMem << " Megabytes\n";
 	cout << " HARD DRIVE SPACE (Allocated for OS):" << totalVirtualMem << " Gigabytes\n";
-	cout << "Processor: unknown x86x64 processor\n";
+	cout << "Processor: (intel)unknown x86x64 processor\n";
 	cout << "Hard drive: Unknown SATA ACHI Drive\n";
       DWORD test = GetLogicalDriveStrings( mydrives, lpBuffer);
 
-      printf("The logical drives of this machine are:\n\n");
+      printf("The logical drives (and partitions) of this machine are:\n\n");
 
       for(int d = 0; d<100; d++)    printf("%c", lpBuffer[d]);
 
@@ -180,11 +193,16 @@ int main(int argc, char** argv) {
 		system("color C7");
 	}
 	if (input1 == "dir" or input1 == "DIR"){
-		cout << "SOON!\n";
-		
+		cout << "Enter directory path (eg. C:/folder/)";
+		cin >> fileopen2;
+		_chdir(fileopen2.c_str());
 	}
 	if (input1 == "cdir" or input1 == "CDIR"){
 		cout << "current dir is: " << pathh << "\n";
+	}
+	if (input1 == "ls" or input1 == "LS"){
+		system("dir");
+
 	}
 	if (input1 == "logout" or input1 == "LOGOUT" and b == 51) {
 		goto label_0;
@@ -209,10 +227,17 @@ int main(int argc, char** argv) {
 		system("color F0");
 		goto label_3;
 	}
+	if (input1 == "PURPLE" or input1 == "purple") {
+		system("color D3");
+		goto label_3;
+	}
 	if (input1 == "crash"){
 		system("color C7");
-		cout << "ERR 0x0000099912CVOS - Stack overflow\n";
-		return 0;
+		cout << "ERR 0x0000099912CVOS - tried to do following operations: int a = f; \n";
+		int y;
+		y = 0;
+		y = y / y;
+		
 	}
 	if (input1 == "cls"){
 		system("CLS");
@@ -257,10 +282,14 @@ int main(int argc, char** argv) {
 		Sleep(512);
 		return 0;
 	}
+	if (input1 == "ls") {
+
+	}
 	if (input1 == "password" or input1 == "PASSWORD") {
 		cout << "Enter a password!(only numbers and letters): ";
 		cin >> password1;
 		cout << "Password set, rebooting!";
+		system("CLS");
 		Sleep(1123);
 		c = 5;
 		b = 51;
